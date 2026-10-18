@@ -1,0 +1,131 @@
+# Synthetic commercial lending credit policy (for testing only).
+#
+# check_type tells the Compliance Review Agent how to evaluate a rule:
+#   threshold  - numeric comparison on an extracted (or derived) term; done in code
+#   presence   - the clause/term must exist in the document
+#   judgment   - needs LLM reasoning over the evidence
+# Missing evidence must never produce PASS: it becomes NEEDS_REVIEW (or FAIL where stated).
+
+policy_name: Harborview Commercial Lending Policy (Synthetic)
+version: "1.0"
+
+escalation:
+  # The orchestrator routes to human escalation if any of these is true
+  on_fail_severity: [critical, high]
+  on_needs_review: true
+  min_term_confidence: 0.7
+
+rules:
+  - id: CR-01
+    name: Single-borrower exposure limit
+    category: credit
+    check_type: threshold
+    term: principal_amount
+    operator: "<="
+    value: 50000000
+    unit: USD
+    severity: high
+    description: Facility principal must not exceed USD 50,000,000.
+
+  - id: CR-02
+    name: Pricing fully defined
+    category: financial
+    check_type: judgment
+    severity: high
+    description: >
+      The interest rate must be fully specified: either a numeric fixed rate, or a named
+      benchmark plus a numeric margin. A margin "to be agreed" or set in an external
+      document that is not provided is not compliant.
+
+  - id: CR-03
+    name: Maximum loan-to-value
+    category: credit
+    check_type: threshold
+    term: ltv_ratio            # derived: principal_amount / collateral_value
+    operator: "<="
+    value: 0.75
+    severity: critical
+    description: Loan-to-value must not exceed 75%, using an independent collateral valuation.
+
+  - id: CR-04
+    name: Independent collateral valuation
+    category: credit
+    check_type: judgment
+    severity: high
+    description: >
+      Collateral must be described and supported by a dated valuation from an independent
+      appraiser. A borrower estimate or a valuation "to be delivered" does not satisfy this rule.
+
+  - id: CR-05
+    name: Maximum tenor
+    category: credit
+    check_type: threshold
+    term: tenor_years          # derived: maturity_date - effective_date
+    operator: "<="
+    value: 7
+    severity: medium
+    description: Final maturity must be no more than 7 years after the effective date.
+
+  - id: CR-06
+    name: Minimum DSCR covenant
+    category: covenant
+    check_type: threshold
+    term: dscr_covenant
+    operator: ">="
+    value: 1.25
+    severity: high
+    description: A debt service coverage ratio covenant of at least 1.25x must be included.
+
+  - id: CR-07
+    name: Guarantee for large facilities
+    category: credit
+    check_type: judgment
+    severity: high
+    description: Facilities above USD 10,000,000 require a parent or third-party guarantee.
+
+  - id: CR-08
+    name: Audited financial reporting
+    category: reporting
+    check_type: threshold
+    term: audited_financials_days
+    operator: "<="
+    value: 120
+    severity: medium
+    description: Audited annual financial statements must be delivered within 120 days of year end.
+
+  - id: CR-09
+    name: Core events of default
+    category: legal
+    check_type: judgment
+    severity: high
+    description: Events of default must include payment default, cross-default and insolvency.
+
+  - id: CR-10
+    name: Governing law and jurisdiction
+    category: legal
+    check_type: presence
+    severity: low
+    description: The agreement must state a governing law and a forum for disputes.
+
+  - id: CR-11
+    name: Prepayment terms
+    category: financial
+    check_type: presence
+    severity: medium
+    description: Voluntary and mandatory prepayment terms must be specified.
+
+  - id: CR-12
+    name: Internally consistent key dates
+    category: operational
+    check_type: judgment
+    severity: medium
+    description: >
+      Effective date, first repayment date and maturity date must be stated consistently
+      everywhere they appear in the document.
+
+  - id: CR-13
+    name: Use-of-proceeds restrictions
+    category: compliance
+    check_type: presence
+    severity: low
+    description: The agreement must state the purpose of the loan and restrict prohibited uses.

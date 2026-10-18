@@ -1,0 +1,21 @@
+# Orchestration + LLM
+langgraph>=0.2
+langchain-core>=0.3
+langchain-google-genai>=2.0
+
+# Data contracts between agents
+pydantic>=2.6
+
+# Document processing
+pymupdf>=1.24
+
+# Config
+pyyaml>=6.0
+python-dotenv>=1.0
+
+# UI
+streamlit>=1.35
+
+# Dev / tests / sample generation
+pytest>=8.0
+reportlab>=4.0

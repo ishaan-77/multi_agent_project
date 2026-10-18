@@ -1,0 +1,19 @@
+# Secrets — never commit your real API key
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Run artifacts (sample outputs we want to keep are committed explicitly)
+outputs/runs/
+*.log
