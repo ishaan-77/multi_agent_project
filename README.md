@@ -44,7 +44,7 @@ python -m pytest -q
 | `python -m scripts.check_gemini` | Verifies the key, plain calls and structured output |
 | `python run.py --deal <file> [--rules <yaml>]` | Runs the CLI and writes `outputs/<deal>/report.md`, `report.json` and `audit_log.json` |
 | `streamlit run app.py` | Opens the web UI: run or upload a deal, watch the agents live, explore the report |
-| `python -m pytest -q` | Runs 26 tests using a fake LLM (offline, no API key needed) |
+| `python -m pytest -q` | Runs 40 tests using a fake LLM (offline, no API key needed) |
 | `python -m scripts.show_chunks <file>` | Shows how the document was split into citable chunks |
 
 You can review saved reports in `outputs/` or open them in the UI ("Open a saved report")
@@ -57,6 +57,7 @@ without calling the API.
 | # | Agent | Type | Responsibility | Writes to shared state |
 |---|---|---|---|---|
 | 1 | **Ingestion** | code | Splits the PDF/TXT/MD into one chunk per clause with stable IDs (`p2:7.2` = page 2, clause 7.2). Loads and validates the YAML rule set. Documents without numbered clauses get page-block IDs (`p1:b2`). | `document`, `chunks`, `ruleset` |
+| 1b | **Policy Parser** | Gemini + code | Runs only when the rules arrive as a document (PDF, DOCX, TXT, MD). Turns each requirement into a rule that cites the policy sentence it came from, as `pol:p1:1.2`. Code then checks every citation, downgrades a threshold with no number to a judgment rule, and makes the IDs unique. A rule that can't be traced is reported as NEEDS_REVIEW and never trusted. | `ruleset` |
 | 2 | **Term Extraction** | Gemini | Extracts ~28 material terms: parties, amounts, dates, pricing, covenants, collateral, obligations, events of default, conditions, exclusions. Each term has a `chunk_id`, a verbatim quote, a normalized value and a confidence. Conflicting or undefined values get confidence ≤ 0.5 and an explanatory note. | `extraction` |
 | 3 | **Evidence Verifier** | code | Checks that every quote actually appears in the chunk it cites. A failure triggers **one** re-extraction with specific feedback. Anything still failing is marked `verified=false`. | verified flags, `verification_feedback` |
 | 4 | **Compliance Review** | code + Gemini | Threshold rules (LTV, tenor, DSCR, exposure, reporting days) are evaluated **in code**, including derived metrics such as LTV = principal / collateral and tenor from the dates. Judgment and presence rules go to Gemini in one batched call, then through a grounding guard. Each rule gets PASS / FAIL / NEEDS_REVIEW with evidence and a rationale. | `compliance`, `derived_terms` |
@@ -72,6 +73,7 @@ The LLMs do the work that needs reading comprehension: extraction, judgment rule
 ### Orchestration flow
 
 ```
+ingest ──rules are a document──▶ parse_policy ──ok──▶ extract
 ingest ──ok──▶ extract ──ok──▶ verify ──continue──▶ compliance ─▶ risk ─▶ escalate ─▶ assemble
    │              ▲              │
    │              └───retry──────┘   (citation failures, max 1 retry)
@@ -93,6 +95,24 @@ never overwrite each other. Every message between agents is a Pydantic model:
 | Escalation → Report | `Escalation{source, reason, severity}` |
 
 ---
+
+## Rule set formats
+
+`--rules` (CLI) and the UI's rule upload accept these formats:
+
+| Format | Read by | Notes |
+|---|---|---|
+| `.yaml` / `.yml`, `.json` | code | Our field names, or common alternatives: `rule_id`, `field`, `threshold`, `less_than_or_equal`, `must_exist`. A missing `check_type` is inferred. |
+| `.csv` | code | One rule per row, with a header row naming the fields |
+| `.pdf`, `.docx`, `.txt`, `.md` | **Policy Parser** (Gemini), then code checks | Written policies. This adds 1 Gemini call. The parsed rules appear in the report and in the UI so a human can check them. |
+
+`rules/lending_policy.pdf` is the same 13 rules as `rules/lending_policy.yaml`, written as prose:
+
+```bash
+python run.py --deal samples/edge_case_loan.pdf --rules rules/lending_policy.pdf
+```
+
+Terms that a custom rule checks, such as `requested_principal_usd`, are added to the extraction catalog automatically. That way, each number check always has a value to compare.
 
 ## Grounding and traceability
 
@@ -161,7 +181,7 @@ Sample outputs:
 - [`outputs/edge_case_loan/`](outputs/edge_case_loan/): the full report for the edge case.
 - [`outputs/edge_case_loan_quota_exhausted/`](outputs/edge_case_loan_quota_exhausted/): a real run where the Gemini daily quota ran out partway through. It shows graceful degradation: code-checked FAILs are still correct, the Gemini-judged rules become NEEDS_REVIEW, the risk report falls back to the rule-based version, and the deal is escalated. Status is `completed_with_errors`.
 
-Automated tests (`tests/`, 26 tests, fake LLM) cover:
+Automated tests (`tests/`, 40 tests, fake LLM) cover:
 - chunking
 - quote verification
 - threshold logic and derived metrics
@@ -171,6 +191,7 @@ Automated tests (`tests/`, 26 tests, fake LLM) cover:
 - daily-quota fail-fast
 - escalation policy
 - the end-to-end graph
+- rule sets in YAML, JSON, CSV, PDF and DOCX, including the Policy Parser's citation checks
 - the Streamlit UI
 
 ---
@@ -200,7 +221,7 @@ Automated tests (`tests/`, 26 tests, fake LLM) cover:
 ```
 ├── app.py                    Streamlit UI
 ├── run.py                    CLI
-├── rules/lending_policy.yaml 13-rule synthetic credit policy + escalation policy
+├── rules/                    lending_policy.yaml (13 rules + escalation policy) and the same policy as a PDF
 ├── samples/                  synthetic deals + answer key (EXPECTED.md)
 ├── outputs/                  sample reports (md, json, audit log)
 ├── docs/                     architecture diagram (svg, png, pdf)
@@ -211,8 +232,8 @@ Automated tests (`tests/`, 26 tests, fake LLM) cover:
 │   ├── graph.py              LangGraph orchestrator
 │   ├── pipeline.py           run_pipeline(), used by the CLI and the UI
 │   ├── report.py             report.json / report.md rendering
-│   └── agents/               ingestion, extraction, verifier, compliance, risk, escalation
-└── tests/                    26 tests with a fake LLM
+│   └── agents/               ingestion, policy_parser, extraction, verifier, compliance, risk, escalation
+└── tests/                    40 tests with a fake LLM
 ```
 
 ## Development history

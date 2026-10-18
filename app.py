@@ -26,6 +26,7 @@ RUNS = ROOT / "outputs" / "runs"  # git-ignored, so UI runs don't overwrite comm
 
 AGENT_LABELS = {
     "ingest": "📄 Ingestion: chunking document, loading rules",
+    "parse_policy": "📜 Policy Parser (Gemini): turning the policy document into rules",
     "extract": "🔎 Term Extraction (Gemini)",
     "verify": "✅ Evidence Verifier: checking every quote",
     "compliance": "📋 Compliance Review: code checks + Gemini judgment",
@@ -84,15 +85,20 @@ if mode == "Run a new review":
         deal_name = st.sidebar.selectbox("Sample deal", sample_files)
         deal_path = SAMPLES / deal_name if deal_name else None
     else:
-        up = st.sidebar.file_uploader("PDF, TXT or MD", type=["pdf", "txt", "md"])
+        up = st.sidebar.file_uploader("PDF, DOCX, TXT or MD", type=["pdf", "docx", "txt", "md"])
         deal_path = save_upload(up) if up else None
 
     st.sidebar.subheader("2. Rule set")
-    rules_up = st.sidebar.file_uploader("Custom YAML (optional)", type=["yaml", "yml"])
+    rules_up = st.sidebar.file_uploader(
+        "Custom rules (optional)", type=["yaml", "yml", "json", "csv", "pdf", "docx", "txt", "md"],
+        help="Structured rules (YAML, JSON, CSV) are read directly. A written policy (PDF, DOCX, TXT, MD) "
+             "is turned into rules by the Policy Parser agent, using one extra Gemini call.",
+    )
     rules_path = save_upload(rules_up) if rules_up else DEFAULT_RULES
     st.sidebar.caption(f"Using: `{Path(rules_path).name}`")
 
-    st.sidebar.caption("Each run makes 3 Gemini calls (free tier: ~20/day).")
+    is_policy_doc = Path(rules_path).suffix.lower() in {".pdf", ".docx", ".txt", ".md"}
+    st.sidebar.caption(f"This run makes {4 if is_policy_doc else 3} Gemini calls (free tier: ~20/day).")
     if st.sidebar.button("▶ Run review", type="primary", disabled=deal_path is None, use_container_width=True):
         from src.pipeline import run_pipeline
 
@@ -189,6 +195,17 @@ with tabs[2]:
         } for c in matrix])
         st.dataframe(df, use_container_width=True, hide_index=True, height=(len(df) + 1) * 35 + 3,
                      column_config={"Rationale": st.column_config.TextColumn(width="large")})
+    policy = report.get("policy") or {}
+    if policy.get("source") == "document":
+        with st.expander(f"Rules parsed from the policy document ({len(policy.get('rules', []))})", expanded=False):
+            st.caption("The Policy Parser read these rules from the uploaded policy. "
+                       "'Traced' means its quote was found in the policy text by code.")
+            st.dataframe(pd.DataFrame([{
+                "Rule": p["id"], "Name": p["name"], "Check": p["check_type"],
+                "Limit": f"{p['term']} {p['operator']} {p['value']:g}" if p["check_type"] == "threshold" else "",
+                "Severity": p["severity"], "Source": p.get("source") or "", "Traced": "✅" if p.get("verified") else "❌",
+                "Policy text": p.get("source_quote") or "",
+            } for p in policy.get("rules", [])]), use_container_width=True, hide_index=True)
 
 with tabs[3]:
     risks = sorted(report.get("risk_register", []), key=lambda r: SEV_ORDER[r["severity"]])

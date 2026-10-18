@@ -1,746 +1,237 @@
 {
-  "status": "completed_with_errors",
+  "status": "failed",
   "document": {
     "path": "samples/edge_case_loan.pdf",
     "title": "BRIDGE LOAN FACILITY AGREEMENT",
     "page_count": 3,
-    "chunk_count": 23,
+    "chunk_count": 24,
     "structured": true
   },
   "policy": {
-    "name": "Harborview Commercial Lending Policy (Synthetic)",
-    "version": "1.0"
+    "name": "HARBORVIEW COMMERCIAL LENDING POLICY Credit Policy CP-2026",
+    "version": "parsed",
+    "source": "document",
+    "rules": [
+      {
+        "id": "1.1",
+        "name": "Exposure limit",
+        "category": "credit",
+        "check_type": "threshold",
+        "severity": "high",
+        "description": "The principal of any single facility must not exceed USD 50,000,000.",
+        "term": "principal_amount",
+        "operator": "<=",
+        "value": 50000000.0,
+        "unit": "USD",
+        "source": "pol:p1:1.1",
+        "source_quote": "The principal of any single facility must not exceed USD 50,000,000.",
+        "verified": true
+      },
+      {
+        "id": "1.2",
+        "name": "Loan-to-value",
+        "category": "credit",
+        "check_type": "threshold",
+        "severity": "critical",
+        "description": "The loan-to-value ratio must not exceed 75%, measured against an independent collateral valuation.",
+        "term": "ltv_ratio",
+        "operator": "<=",
+        "value": 0.75,
+        "unit": null,
+        "source": "pol:p1:1.2",
+        "source_quote": "The loan-to-value ratio must not exceed 75%, measured against an independent collateral valuation.",
+        "verified": true
+      },
+      {
+        "id": "1.3",
+        "name": "Independent valuation",
+        "category": "credit",
+        "check_type": "judgment",
+        "severity": "high",
+        "description": "Collateral must be described and supported by a dated valuation from an independent appraiser.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:1.3",
+        "source_quote": "Collateral must be described and supported by a dated valuation from an independent appraiser; a borrower estimate or a valuation still to be delivered is not acceptable.",
+        "verified": true
+      },
+      {
+        "id": "1.4",
+        "name": "Tenor",
+        "category": "credit",
+        "check_type": "threshold",
+        "severity": "medium",
+        "description": "The final maturity date must be no more than 7 years after the effective date.",
+        "term": "tenor_years",
+        "operator": "<=",
+        "value": 7.0,
+        "unit": "years",
+        "source": "pol:p1:1.4",
+        "source_quote": "The final maturity date must be no more than 7 years after the effective date.",
+        "verified": true
+      },
+      {
+        "id": "1.5",
+        "name": "Guarantee",
+        "category": "credit",
+        "check_type": "judgment",
+        "severity": "high",
+        "description": "Facilities above USD 10,000,000 require a parent or third-party guarantee.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:1.5",
+        "source_quote": "Facilities above USD 10,000,000 require a parent or third-party guarantee.",
+        "verified": true
+      },
+      {
+        "id": "2.1",
+        "name": "Pricing",
+        "category": "financial",
+        "check_type": "judgment",
+        "severity": "high",
+        "description": "The interest rate must be fully defined as a numeric fixed rate or a named benchmark plus a numeric margin.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:2.1",
+        "source_quote": "The interest rate must be fully defined, either as a numeric fixed rate or as a named benchmark plus a numeric margin.",
+        "verified": true
+      },
+      {
+        "id": "2.2",
+        "name": "Debt service coverage",
+        "category": "covenant",
+        "check_type": "threshold",
+        "severity": "high",
+        "description": "The agreement must include a debt service coverage ratio covenant of at least 1.25x.",
+        "term": "dscr_covenant",
+        "operator": ">=",
+        "value": 1.25,
+        "unit": null,
+        "source": "pol:p1:2.2",
+        "source_quote": "The agreement must include a debt service coverage ratio covenant of at least 1.25x.",
+        "verified": true
+      },
+      {
+        "id": "3.1",
+        "name": "Audited accounts",
+        "category": "reporting",
+        "check_type": "threshold",
+        "severity": "medium",
+        "description": "Audited annual financial statements must be delivered within 120 days of the financial year end.",
+        "term": "audited_financials_days",
+        "operator": "<=",
+        "value": 120.0,
+        "unit": "days",
+        "source": "pol:p1:3.1",
+        "source_quote": "Audited annual financial statements must be delivered within 120 days of the financial year end.",
+        "verified": true
+      },
+      {
+        "id": "3.2",
+        "name": "Events of default",
+        "category": "legal",
+        "check_type": "judgment",
+        "severity": "high",
+        "description": "Events of default must include payment default, cross-default, and insolvency.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:3.2",
+        "source_quote": "The events of default must include payment default, cross-default and insolvency.",
+        "verified": true
+      },
+      {
+        "id": "3.3",
+        "name": "Governing law",
+        "category": "legal",
+        "check_type": "presence",
+        "severity": "low",
+        "description": "The agreement must state a governing law and a forum for disputes.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:3.3",
+        "source_quote": "The agreement must state a governing law and a forum for disputes.",
+        "verified": true
+      },
+      {
+        "id": "3.4",
+        "name": "Prepayment",
+        "category": "legal",
+        "check_type": "presence",
+        "severity": "medium",
+        "description": "Voluntary and mandatory prepayment terms must be specified.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:3.4",
+        "source_quote": "Voluntary and mandatory prepayment terms must be specified.",
+        "verified": true
+      },
+      {
+        "id": "3.5",
+        "name": "Key dates",
+        "category": "operational",
+        "check_type": "judgment",
+        "severity": "medium",
+        "description": "Effective date, first repayment date, and maturity date must be stated consistently.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:3.5",
+        "source_quote": "The effective date, first repayment date and maturity date must be stated consistently wherever they appear.",
+        "verified": true
+      },
+      {
+        "id": "3.6",
+        "name": "Use of proceeds",
+        "category": "compliance",
+        "check_type": "presence",
+        "severity": "low",
+        "description": "The agreement must state the purpose of the loan and restrict prohibited uses of proceeds.",
+        "term": null,
+        "operator": null,
+        "value": null,
+        "unit": null,
+        "source": "pol:p1:3.6",
+        "source_quote": "The agreement must state the purpose of the loan and restrict prohibited uses of the proceeds.",
+        "verified": true
+      }
+    ]
   },
   "decision": "ESCALATE_TO_HUMAN_REVIEW",
-  "executive_summary": "[Automated fallback - the Risk & Summary LLM was unavailable.] 4 policy breaches and 16 open items were identified by the compliance review. A human reviewer should assess overall credit risk.",
+  "executive_summary": null,
   "escalations": [
     {
-      "source": "compliance:CR-03",
-      "reason": "Maximum loan-to-value failed: ltv_ratio = 88.9% (normalized 0.8889); policy requires <= 0.75. Limit breached.",
+      "source": "orchestrator",
+      "reason": "Pipeline could not complete; the deal must be reviewed manually.",
       "severity": "critical"
     },
     {
-      "source": "risk:R-01",
-      "reason": "Policy breach: Maximum loan-to-value: ltv_ratio = 88.9% (normalized 0.8889); policy requires <= 0.75. Limit breached.",
-      "severity": "critical"
-    },
-    {
-      "source": "compliance:CR-02",
-      "reason": "Pricing fully defined needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "high"
-    },
-    {
-      "source": "compliance:CR-04",
-      "reason": "Independent collateral valuation needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "high"
-    },
-    {
-      "source": "compliance:CR-06",
-      "reason": "Minimum DSCR covenant failed: dscr_covenant = not less than 1.10x (normalized 1.1); policy requires >= 1.25. Limit breached.",
-      "severity": "high"
-    },
-    {
-      "source": "compliance:CR-07",
-      "reason": "Guarantee for large facilities needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "high"
-    },
-    {
-      "source": "compliance:CR-09",
-      "reason": "Core events of default needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "high"
-    },
-    {
       "source": "system",
-      "reason": "Agent error: compliance: compliance: failed after 3 attempts: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quot",
+      "reason": "Agent error: extraction: extraction: daily API quota exhausted, not retrying: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded y",
       "severity": "high"
-    },
-    {
-      "source": "system",
-      "reason": "Agent error: risk: risk: failed after 3 attempts: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please ch",
-      "severity": "high"
-    },
-    {
-      "source": "compliance:CR-11",
-      "reason": "Prepayment terms needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "medium"
-    },
-    {
-      "source": "compliance:CR-12",
-      "reason": "Internally consistent key dates needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "medium"
-    },
-    {
-      "source": "extraction:effective_date",
-      "reason": "Low-confidence term 'effective_date' (0.40): Conflict between Clause 2 (1 April 2026) and Schedule 1 (1 May 2026).",
-      "severity": "medium"
-    },
-    {
-      "source": "extraction:margin_pct",
-      "reason": "Low-confidence term 'margin_pct' (0.30): Applicable margin is undefined in this agreement and deferred to a separate fee letter.",
-      "severity": "medium"
-    },
-    {
-      "source": "extraction:leverage_covenant",
-      "reason": "Low-confidence term 'leverage_covenant' (0.40): Levels are undefined in the agreement and remain to be agreed between the parties.",
-      "severity": "medium"
-    },
-    {
-      "source": "compliance:CR-10",
-      "reason": "Governing law and jurisdiction needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "low"
-    },
-    {
-      "source": "compliance:CR-13",
-      "reason": "Use-of-proceeds restrictions needs human judgment: Compliance LLM unavailable; rule must be checked manually.",
-      "severity": "low"
     }
   ],
-  "compliance_matrix": [
-    {
-      "rule_id": "CR-01",
-      "rule_name": "Single-borrower exposure limit",
-      "severity": "high",
-      "status": "PASS",
-      "evidence": [
-        {
-          "chunk_id": "p1:3.1",
-          "quote": "in an aggregate amount of USD 40,000,000."
-        }
-      ],
-      "rationale": "principal_amount = USD 40,000,000 (normalized 40,000,000); policy requires <= 50,000,000 USD. Within limit.",
-      "method": "deterministic"
-    },
-    {
-      "rule_id": "CR-02",
-      "rule_name": "Pricing fully defined",
-      "severity": "high",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-03",
-      "rule_name": "Maximum loan-to-value",
-      "severity": "critical",
-      "status": "FAIL",
-      "evidence": [
-        {
-          "chunk_id": "p1:3.1",
-          "quote": "in an aggregate amount of USD 40,000,000."
-        },
-        {
-          "chunk_id": "p2:6.2",
-          "quote": "The Borrower's preliminary internal estimate of the Bayfront Parcel is USD 45,000,000."
-        }
-      ],
-      "rationale": "ltv_ratio = 88.9% (normalized 0.8889); policy requires <= 0.75. Limit breached.",
-      "method": "deterministic"
-    },
-    {
-      "rule_id": "CR-04",
-      "rule_name": "Independent collateral valuation",
-      "severity": "high",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-05",
-      "rule_name": "Maximum tenor",
-      "severity": "medium",
-      "status": "FAIL",
-      "evidence": [
-        {
-          "chunk_id": "p1:2.1",
-          "quote": "\"Effective Date\" means 1 April 2026."
-        },
-        {
-          "chunk_id": "p3:S1.1",
-          "quote": "Effective Date: 1 May 2026."
-        },
-        {
-          "chunk_id": "p2:5.2",
-          "quote": "The Final Maturity Date is 31 March 2036."
-        },
-        {
-          "chunk_id": "p3:S1.3",
-          "quote": "Final Maturity Date: 31 March 2036."
-        }
-      ],
-      "rationale": "tenor_years = 10.0 years (normalized 10); policy requires <= 7. Breaches the limit even on a low-confidence value (0.40): derived: maturity_date - effective_date | effective_date: Conflict between Clause 2 (1 April 2026) and Schedule 1 (1 May 2026).",
-      "method": "deterministic"
-    },
-    {
-      "rule_id": "CR-06",
-      "rule_name": "Minimum DSCR covenant",
-      "severity": "high",
-      "status": "FAIL",
-      "evidence": [
-        {
-          "chunk_id": "p2:7.1",
-          "quote": "The Borrower shall maintain a Debt Service Coverage Ratio of not less than 1.10x."
-        }
-      ],
-      "rationale": "dscr_covenant = not less than 1.10x (normalized 1.1); policy requires >= 1.25. Limit breached.",
-      "method": "deterministic"
-    },
-    {
-      "rule_id": "CR-07",
-      "rule_name": "Guarantee for large facilities",
-      "severity": "high",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-08",
-      "rule_name": "Audited financial reporting",
-      "severity": "medium",
-      "status": "FAIL",
-      "evidence": [
-        {
-          "chunk_id": "p2:8.1",
-          "quote": "deliver audited annual financial statements within 180 days after the end of each financial year."
-        }
-      ],
-      "rationale": "audited_financials_days = within 180 days after the end of each financial year (normalized 180); policy requires <= 120. Limit breached.",
-      "method": "deterministic"
-    },
-    {
-      "rule_id": "CR-09",
-      "rule_name": "Core events of default",
-      "severity": "high",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-10",
-      "rule_name": "Governing law and jurisdiction",
-      "severity": "low",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-11",
-      "rule_name": "Prepayment terms",
-      "severity": "medium",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-12",
-      "rule_name": "Internally consistent key dates",
-      "severity": "medium",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    },
-    {
-      "rule_id": "CR-13",
-      "rule_name": "Use-of-proceeds restrictions",
-      "severity": "low",
-      "status": "NEEDS_REVIEW",
-      "evidence": [],
-      "rationale": "Compliance LLM unavailable; rule must be checked manually.",
-      "method": "llm"
-    }
-  ],
-  "risk_register": [
-    {
-      "id": "R-01",
-      "category": "financial",
-      "title": "Policy breach: Maximum loan-to-value",
-      "description": "ltv_ratio = 88.9% (normalized 0.8889); policy requires <= 0.75. Limit breached.",
-      "severity": "critical",
-      "likelihood": "high",
-      "evidence": [
-        {
-          "chunk_id": "p1:3.1",
-          "quote": "in an aggregate amount of USD 40,000,000."
-        },
-        {
-          "chunk_id": "p2:6.2",
-          "quote": "The Borrower's preliminary internal estimate of the Bayfront Parcel is USD 45,000,000."
-        }
-      ],
-      "recommendation": "Resolve CR-03 before approval or obtain a documented policy exception."
-    },
-    {
-      "id": "R-02",
-      "category": "financial",
-      "title": "Policy breach: Minimum DSCR covenant",
-      "description": "dscr_covenant = not less than 1.10x (normalized 1.1); policy requires >= 1.25. Limit breached.",
-      "severity": "high",
-      "likelihood": "high",
-      "evidence": [
-        {
-          "chunk_id": "p2:7.1",
-          "quote": "The Borrower shall maintain a Debt Service Coverage Ratio of not less than 1.10x."
-        }
-      ],
-      "recommendation": "Resolve CR-06 before approval or obtain a documented policy exception."
-    },
-    {
-      "id": "R-03",
-      "category": "financial",
-      "title": "Policy breach: Maximum tenor",
-      "description": "tenor_years = 10.0 years (normalized 10); policy requires <= 7. Breaches the limit even on a low-confidence value (0.40): derived: maturity_date - effective_date | effective_date: Conflict between Clause 2 (1 April 2026) and Schedule 1 (1 May 2026).",
-      "severity": "medium",
-      "likelihood": "high",
-      "evidence": [
-        {
-          "chunk_id": "p1:2.1",
-          "quote": "\"Effective Date\" means 1 April 2026."
-        },
-        {
-          "chunk_id": "p3:S1.1",
-          "quote": "Effective Date: 1 May 2026."
-        },
-        {
-          "chunk_id": "p2:5.2",
-          "quote": "The Final Maturity Date is 31 March 2036."
-        },
-        {
-          "chunk_id": "p3:S1.3",
-          "quote": "Final Maturity Date: 31 March 2036."
-        }
-      ],
-      "recommendation": "Resolve CR-05 before approval or obtain a documented policy exception."
-    },
-    {
-      "id": "R-04",
-      "category": "operational",
-      "title": "Policy breach: Audited financial reporting",
-      "description": "audited_financials_days = within 180 days after the end of each financial year (normalized 180); policy requires <= 120. Limit breached.",
-      "severity": "medium",
-      "likelihood": "high",
-      "evidence": [
-        {
-          "chunk_id": "p2:8.1",
-          "quote": "deliver audited annual financial statements within 180 days after the end of each financial year."
-        }
-      ],
-      "recommendation": "Resolve CR-08 before approval or obtain a documented policy exception."
-    }
-  ],
-  "gaps": [
-    "Not found in document: guarantor",
-    "Not found in document: default_interest",
-    "Not found in document: prepayment_terms",
-    "Not found in document: guarantee",
-    "Not found in document: other_covenants",
-    "Not found in document: conditions_precedent",
-    "Not found in document: use_of_proceeds_restrictions",
-    "Not found in document: exclusions",
-    "CR-02 Pricing fully defined: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-04 Independent collateral valuation: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-07 Guarantee for large facilities: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-09 Core events of default: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-10 Governing law and jurisdiction: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-11 Prepayment terms: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-12 Internally consistent key dates: Compliance LLM unavailable; rule must be checked manually.",
-    "CR-13 Use-of-proceeds restrictions: Compliance LLM unavailable; rule must be checked manually."
-  ],
-  "follow_up_actions": [
-    "Re-run the risk analysis when the LLM is available.",
-    "Address: Policy breach: Maximum loan-to-value",
-    "Address: Policy breach: Maximum tenor",
-    "Address: Policy breach: Minimum DSCR covenant",
-    "Address: Policy breach: Audited financial reporting"
-  ],
-  "extracted_terms": [
-    {
-      "name": "lender",
-      "value": "Harborview Commercial Bank N.A.",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:1.1",
-          "quote": "Lender: Harborview Commercial Bank N.A. (the \"Lender\")."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "borrower",
-      "value": "Coastal Ridge Developers LLC",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:1.2",
-          "quote": "Borrower: Coastal Ridge Developers LLC, a Florida limited liability company"
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "facility_type",
-      "value": "bridge loan facility",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:3.1",
-          "quote": "The Lender makes available to the Borrower a bridge loan facility"
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "principal_amount",
-      "value": "USD 40,000,000",
-      "normalized": 40000000.0,
-      "unit": "USD",
-      "evidence": [
-        {
-          "chunk_id": "p1:3.1",
-          "quote": "in an aggregate amount of USD 40,000,000."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "purpose",
-      "value": "general corporate purposes, including the development of the Bayfront Parcel",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:3.2",
-          "quote": "Purpose: general corporate purposes, including the development of the Bayfront Parcel."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "effective_date",
-      "value": "2026-04-01 / 2026-05-01",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:2.1",
-          "quote": "\"Effective Date\" means 1 April 2026."
-        },
-        {
-          "chunk_id": "p3:S1.1",
-          "quote": "Effective Date: 1 May 2026."
-        }
-      ],
-      "confidence": 0.4,
-      "notes": "Conflict between Clause 2 (1 April 2026) and Schedule 1 (1 May 2026).",
-      "verified": true
-    },
-    {
-      "name": "interest_rate",
-      "value": "Term SOFR plus the Applicable Margin",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:4.1",
-          "quote": "The rate of interest on the loan is Term SOFR plus the Applicable Margin."
-        }
-      ],
-      "confidence": 0.9,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "margin_pct",
-      "value": "margin determined by the parties in a separate fee letter",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:2.2",
-          "quote": "\"Applicable Margin\" means the margin determined by the parties in a separate fee letter."
-        }
-      ],
-      "confidence": 0.3,
-      "notes": "Applicable margin is undefined in this agreement and deferred to a separate fee letter.",
-      "verified": true
-    },
-    {
-      "name": "interest_payment_frequency",
-      "value": "at such intervals as the Lender may notify from time to time",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p1:4.2",
-          "quote": "Interest is payable at such intervals as the Lender may notify from time to time."
-        }
-      ],
-      "confidence": 0.7,
-      "notes": "Payment frequency is discretionary at Lender notification rather than fixed.",
-      "verified": true
-    },
-    {
-      "name": "first_repayment_date",
-      "value": "2026-06-30",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p2:5.1",
-          "quote": "the first falling due on 30 June 2026."
-        },
-        {
-          "chunk_id": "p3:S1.2",
-          "quote": "First repayment: 30 June 2026; thereafter quarterly instalments"
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "maturity_date",
-      "value": "2036-03-31",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p2:5.2",
-          "quote": "The Final Maturity Date is 31 March 2036."
-        },
-        {
-          "chunk_id": "p3:S1.3",
-          "quote": "Final Maturity Date: 31 March 2036."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "repayment_schedule",
-      "value": "repaid in instalments as set out in Schedule 1: first falling due on 30 June 2026; thereafter quarterly instalments of USD 1,000,000",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p2:5.1",
-          "quote": "The loan shall be repaid in instalments as set out in Schedule 1, the first falling due on 30 June 2026."
-        },
-        {
-          "chunk_id": "p3:S1.2",
-          "quote": "First repayment: 30 June 2026; thereafter quarterly instalments of USD 1,000,000."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "collateral_description",
-      "value": "mortgage over the Bayfront Parcel, Lots 14-19, Pinellas County, Florida",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p2:6.1",
-          "quote": "The loan is secured by a mortgage over the Bayfront Parcel, Lots 14-19, Pinellas County, Florida."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "collateral_value",
-      "value": "USD 45,000,000",
-      "normalized": 45000000.0,
-      "unit": "USD",
-      "evidence": [
-        {
-          "chunk_id": "p2:6.2",
-          "quote": "The Borrower's preliminary internal estimate of the Bayfront Parcel is USD 45,000,000."
-        }
-      ],
-      "confidence": 0.7,
-      "notes": "Stated figure is Borrower's preliminary internal estimate; valuation report to be delivered post-Effective Date.",
-      "verified": true
-    },
-    {
-      "name": "collateral_valuation_source",
-      "value": "Borrower's preliminary internal estimate (valuation report to be delivered after Effective Date)",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p2:6.2",
-          "quote": "The value of the collateral shall be as stated in a valuation report to be delivered after the Effective Date. The Borrower's preliminary internal estimate"
-        }
-      ],
-      "confidence": 0.8,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "dscr_covenant",
-      "value": "not less than 1.10x",
-      "normalized": 1.1,
-      "unit": "ratio",
-      "evidence": [
-        {
-          "chunk_id": "p2:7.1",
-          "quote": "The Borrower shall maintain a Debt Service Coverage Ratio of not less than 1.10x."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "leverage_covenant",
-      "value": "to be agreed between the parties",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p2:7.2",
-          "quote": "Leverage covenant levels are to be agreed between the parties."
-        }
-      ],
-      "confidence": 0.4,
-      "notes": "Levels are undefined in the agreement and remain to be agreed between the parties.",
-      "verified": true
-    },
-    {
-      "name": "audited_financials_days",
-      "value": "within 180 days after the end of each financial year",
-      "normalized": 180.0,
-      "unit": "days",
-      "evidence": [
-        {
-          "chunk_id": "p2:8.1",
-          "quote": "deliver audited annual financial statements within 180 days after the end of each financial year."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "events_of_default",
-      "value": "Non-payment (failure to pay any amount when due); Insolvency (any insolvency proceeding commenced against Borrower)",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p3:9.1",
-          "quote": "Non-payment: the Borrower fails to pay any amount when due."
-        },
-        {
-          "chunk_id": "p3:9.2",
-          "quote": "Insolvency: any insolvency proceeding is commenced against the Borrower."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    },
-    {
-      "name": "governing_law",
-      "value": "laws of the State of Florida; Pinellas County non-exclusive jurisdiction",
-      "normalized": null,
-      "unit": null,
-      "evidence": [
-        {
-          "chunk_id": "p3:11.1",
-          "quote": "This Agreement is governed by the laws of the State of Florida. The courts of Pinellas County have non-exclusive jurisdiction."
-        }
-      ],
-      "confidence": 1.0,
-      "notes": null,
-      "verified": true
-    }
-  ],
-  "derived_terms": [
-    {
-      "name": "ltv_ratio",
-      "value": "88.9%",
-      "normalized": 0.8889,
-      "unit": "ratio",
-      "evidence": [
-        {
-          "chunk_id": "p1:3.1",
-          "quote": "in an aggregate amount of USD 40,000,000."
-        },
-        {
-          "chunk_id": "p2:6.2",
-          "quote": "The Borrower's preliminary internal estimate of the Bayfront Parcel is USD 45,000,000."
-        }
-      ],
-      "confidence": 0.7,
-      "notes": "derived: principal_amount / collateral_value | collateral_value: Stated figure is Borrower's preliminary internal estimate; valuation report to be delivered post-Effective Date.",
-      "verified": true
-    },
-    {
-      "name": "tenor_years",
-      "value": "10.0 years",
-      "normalized": 10.0,
-      "unit": "years",
-      "evidence": [
-        {
-          "chunk_id": "p1:2.1",
-          "quote": "\"Effective Date\" means 1 April 2026."
-        },
-        {
-          "chunk_id": "p3:S1.1",
-          "quote": "Effective Date: 1 May 2026."
-        },
-        {
-          "chunk_id": "p2:5.2",
-          "quote": "The Final Maturity Date is 31 March 2036."
-        },
-        {
-          "chunk_id": "p3:S1.3",
-          "quote": "Final Maturity Date: 31 March 2036."
-        }
-      ],
-      "confidence": 0.4,
-      "notes": "derived: maturity_date - effective_date | effective_date: Conflict between Clause 2 (1 April 2026) and Schedule 1 (1 May 2026).",
-      "verified": true
-    }
-  ],
-  "missing_terms": [
-    "guarantor",
-    "default_interest",
-    "prepayment_terms",
-    "guarantee",
-    "other_covenants",
-    "conditions_precedent",
-    "use_of_proceeds_restrictions",
-    "exclusions"
-  ],
+  "compliance_matrix": [],
+  "risk_register": [],
+  "gaps": [],
+  "follow_up_actions": [],
+  "extracted_terms": [],
+  "derived_terms": [],
+  "missing_terms": [],
   "errors": [
-    "compliance: compliance: failed after 3 attempts: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\\nPlease retry in 15h20m14.534470286s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.8-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '55214s'}]}}",
-    "risk: risk: failed after 3 attempts: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash\\nPlease retry in 15h17m57.947554725s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.8-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '55077s'}]}}"
+    "extraction: extraction: daily API quota exhausted, not retrying: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
   ],
   "extraction_attempts": 1
 }
