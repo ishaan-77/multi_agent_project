@@ -59,8 +59,26 @@ Rules:
 6. Leave the `verified` field empty; another agent sets it."""
 
 
+DERIVED_TERMS = {"ltv_ratio", "tenor_years"}  # computed in code by the Compliance agent
+
+
+def policy_terms(state: PipelineState) -> dict[str, str]:
+    """Terms that the rule set's threshold rules check but the catalog doesn't name.
+
+    A custom policy may check e.g. 'requested_principal_usd'; the extractor must then
+    extract a term with exactly that name, or the code check would have nothing to compare.
+    """
+    ruleset = state.get("ruleset")
+    extra = {}
+    for r in (ruleset.rules if ruleset else []):
+        if r.check_type == "threshold" and r.term and r.term not in TERM_CATALOG and r.term not in DERIVED_TERMS:
+            unit = f" in {r.unit}" if r.unit else ""
+            extra[r.term] = f"Required by policy rule {r.id} ({r.description.strip()}). normalized = the number{unit}"
+    return extra
+
+
 def build_prompt(state: PipelineState) -> str:
-    catalog = "\n".join(f"- {name}: {desc}" for name, desc in TERM_CATALOG.items())
+    catalog = "\n".join(f"- {name}: {desc}" for name, desc in {**TERM_CATALOG, **policy_terms(state)}.items())
     prompt = (
         f"TERM CATALOG (use these exact names; you may add other material terms in snake_case):\n"
         f"{catalog}\n\nDOCUMENT (one clause per line, chunk_id in brackets):\n"

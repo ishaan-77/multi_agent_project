@@ -1,0 +1,50 @@
+policy_id: SYN-POLICY-2026-01
+policy_name: Synthetic Business Loan Review Rules
+notice: Fictional rules for software testing only; not legal, regulatory, or lending advice.
+currency: USD
+rules:
+  - rule_id: R-001
+    name: Principal limit
+    description: Requested principal must not exceed USD 750,000.
+    field: requested_principal_usd
+    operator: less_than_or_equal
+    threshold: 750000
+    severity: medium
+  - rule_id: R-002
+    name: Interest rate cap
+    description: Fixed annual interest rate must not exceed 9.0%.
+    field: interest_rate_percent
+    operator: less_than_or_equal
+    threshold: 9
+    severity: high
+  - rule_id: R-003
+    name: Maturity date required
+    description: A maturity date must be explicitly stated in the submitted request or supporting agreement.
+    field: maturity_date
+    operator: must_exist
+    severity: high
+  - rule_id: R-004
+    name: Collateral identification and valuation
+    description: The collateral must be identified, and an independent valuation must be provided before disbursement.
+    field: collateral_and_valuation
+    operator: must_be_described_and_valuation_required
+    severity: high
+  - rule_id: R-005
+    name: Minimum DSCR covenant
+    description: The proposed agreement must include a minimum DSCR covenant of at least 1.20x.
+    field: minimum_dscr
+    operator: greater_than_or_equal
+    threshold: 1.2
+    severity: high
+  - rule_id: R-006
+    name: Executed signatures before disbursement
+    description: Both parties must execute the final agreement before funds are disbursed.
+    field: executed_signatures
+    operator: must_exist_before_disbursement
+    severity: high
+  - rule_id: R-007
+    name: Specified governing law
+    description: The final agreement must identify a real, specified governing-law jurisdiction.
+    field: governing_law
+    operator: must_be_specified_real_jurisdiction
+    severity: high

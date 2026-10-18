@@ -44,6 +44,10 @@ class Rule(BaseModel):
     operator: Optional[Literal["<=", ">=", "<", ">", "=="]] = None
     value: Optional[float] = None
     unit: Optional[str] = None
+    # Set only for rules parsed from a policy document (PDF/DOCX/TXT/MD):
+    source: Optional[str] = Field(default=None, description="Policy chunk the rule came from, e.g. 'pol:p2:3.1'")
+    source_quote: Optional[str] = None
+    verified: Optional[bool] = Field(default=None, description="True if source_quote was found in the policy text")
 
 
 class EscalationPolicy(BaseModel):
@@ -157,7 +161,9 @@ class PipelineState(TypedDict, total=False):
     # ingestion
     document: DocumentInfo
     chunks: list[Chunk]
-    ruleset: RuleSet
+    ruleset: RuleSet                      # None until the Policy Parser runs, for document policies
+    policy_source: Literal["structured", "document"]
+    policy_chunks: list[Chunk]            # the policy document's chunks (ids start with 'pol:')
     # agents
     extraction: ExtractionResult
     extraction_attempts: int

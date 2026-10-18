@@ -1,86 +1,38 @@
 [
   {
-    "timestamp": "2026-10-18T08:36:48.559568+00:00",
+    "timestamp": "2026-10-18T14:21:29.138484+00:00",
     "agent": "ingestion",
     "event": "completed",
-    "detail": "3 pages -> 23 chunks (structured=True); 13 rules loaded from 'Harborview Commercial Lending Policy (Synthetic)'"
+    "detail": "3 pages -> 24 chunks (structured=True); policy document lending_policy.pdf -> 14 chunks for the Policy Parser"
   },
   {
-    "timestamp": "2026-10-18T08:37:25.631509+00:00",
-    "agent": "extraction",
+    "timestamp": "2026-10-18T14:21:43.507252+00:00",
+    "agent": "policy_parser",
     "event": "llm_call_ok",
-    "detail": "attempt 1, 36.9s, schema=ExtractionResult"
+    "detail": "attempt 1, 14.2s, schema=ParsedPolicy"
   },
   {
-    "timestamp": "2026-10-18T08:37:25.632761+00:00",
+    "timestamp": "2026-10-18T14:21:43.509364+00:00",
+    "agent": "policy_parser",
+    "event": "completed",
+    "detail": "13 rules parsed (13 traced to the policy text)"
+  },
+  {
+    "timestamp": "2026-10-18T14:22:18.825760+00:00",
     "agent": "extraction",
-    "event": "completed",
-    "detail": "attempt 1: 20 terms, missing=['guarantor', 'default_interest', 'prepayment_terms', 'guarantee', 'other_covenants', 'conditions_precedent', 'use_of_proceeds_restrictions', 'exclusions']"
-  },
-  {
-    "timestamp": "2026-10-18T08:37:25.635960+00:00",
-    "agent": "verifier",
-    "event": "completed",
-    "detail": "20/20 terms verified"
-  },
-  {
-    "timestamp": "2026-10-18T08:38:02.676031+00:00",
-    "agent": "compliance",
     "event": "llm_call_failed",
     "detail": "attempt 1: GoogleRateLimitError: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
   },
   {
-    "timestamp": "2026-10-18T08:38:48.693591+00:00",
-    "agent": "compliance",
-    "event": "llm_call_failed",
-    "detail": "attempt 2: GoogleRateLimitError: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
-  },
-  {
-    "timestamp": "2026-10-18T08:39:45.437792+00:00",
-    "agent": "compliance",
-    "event": "llm_call_failed",
-    "detail": "attempt 3: GoogleRateLimitError: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
-  },
-  {
-    "timestamp": "2026-10-18T08:39:45.439415+00:00",
-    "agent": "compliance",
-    "event": "completed",
-    "detail": "5 deterministic + 8 LLM rules -> {'PASS': 1, 'FAIL': 4, 'NEEDS_REVIEW': 8}"
-  },
-  {
-    "timestamp": "2026-10-18T08:40:21.037746+00:00",
-    "agent": "risk",
-    "event": "llm_call_failed",
-    "detail": "attempt 1: GoogleRateLimitError: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
-  },
-  {
-    "timestamp": "2026-10-18T08:41:06.237596+00:00",
-    "agent": "risk",
-    "event": "llm_call_failed",
-    "detail": "attempt 2: GoogleRateLimitError: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
-  },
-  {
-    "timestamp": "2026-10-18T08:42:02.006140+00:00",
-    "agent": "risk",
-    "event": "llm_call_failed",
-    "detail": "attempt 3: GoogleRateLimitError: Error calling model 'gemini-3.8-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To mon"
-  },
-  {
-    "timestamp": "2026-10-18T08:42:02.007165+00:00",
-    "agent": "risk",
-    "event": "fallback",
-    "detail": "used rule-based risk report"
-  },
-  {
-    "timestamp": "2026-10-18T08:42:02.009529+00:00",
+    "timestamp": "2026-10-18T14:22:18.833264+00:00",
     "agent": "escalation",
     "event": "completed",
-    "detail": "16 items escalated for human review"
+    "detail": "2 items escalated for human review"
   },
   {
-    "timestamp": "2026-10-18T08:42:02.009777+00:00",
+    "timestamp": "2026-10-18T14:22:18.833546+00:00",
     "agent": "orchestrator",
     "event": "finished",
-    "detail": "status=completed_with_errors"
+    "detail": "status=failed"
   }
 ]

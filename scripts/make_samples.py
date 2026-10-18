@@ -3,6 +3,8 @@
 Run from the project root:  python -m scripts.make_samples
 
   samples/normal_loan.pdf     - clean deal, should pass nearly every rule
+  rules/lending_policy.pdf    - the same 13 rules written as a prose policy, to test the
+                                Policy Parser (rules from a document instead of YAML)
   samples/edge_case_loan.pdf  - deliberately flawed deal: LTV breach, undefined margin,
                                 conflicting dates, missing guarantee/prepayment/cross-default,
                                 weak covenants. Should trigger human escalation.
@@ -148,6 +150,32 @@ EDGE = {
     ],
 }
 
+POLICY = {
+    "title": "HARBORVIEW COMMERCIAL LENDING POLICY",
+    "ref": "Credit Policy CP-2026 (written version of rules/lending_policy.yaml)",
+    "sections": [
+        ("1", "Credit Limits", [
+            ("1.1", "Exposure limit. The principal of any single facility must not exceed USD 50,000,000. Severity: high."),
+            ("1.2", "Loan-to-value. The loan-to-value ratio must not exceed 75%, measured against an independent collateral valuation. Severity: critical."),
+            ("1.3", "Independent valuation. Collateral must be described and supported by a dated valuation from an independent appraiser; a borrower estimate or a valuation still to be delivered is not acceptable. Severity: high."),
+            ("1.4", "Tenor. The final maturity date must be no more than 7 years after the effective date. Severity: medium."),
+            ("1.5", "Guarantee. Facilities above USD 10,000,000 require a parent or third-party guarantee. Severity: high."),
+        ]),
+        ("2", "Pricing and Covenants", [
+            ("2.1", "Pricing. The interest rate must be fully defined, either as a numeric fixed rate or as a named benchmark plus a numeric margin. A margin left to a separate letter that is not provided does not comply. Severity: high."),
+            ("2.2", "Debt service coverage. The agreement must include a debt service coverage ratio covenant of at least 1.25x. Severity: high."),
+        ]),
+        ("3", "Reporting and Legal Terms", [
+            ("3.1", "Audited accounts. Audited annual financial statements must be delivered within 120 days of the financial year end. Severity: medium."),
+            ("3.2", "Events of default. The events of default must include payment default, cross-default and insolvency. Severity: high."),
+            ("3.3", "Governing law. The agreement must state a governing law and a forum for disputes. Severity: low."),
+            ("3.4", "Prepayment. Voluntary and mandatory prepayment terms must be specified. Severity: medium."),
+            ("3.5", "Key dates. The effective date, first repayment date and maturity date must be stated consistently wherever they appear. Severity: medium."),
+            ("3.6", "Use of proceeds. The agreement must state the purpose of the loan and restrict prohibited uses of the proceeds. Severity: low."),
+        ]),
+    ],
+}
+
 
 def build(spec: dict, path: Path) -> None:
     styles = getSampleStyleSheet()
@@ -186,3 +214,4 @@ if __name__ == "__main__":
     OUT.mkdir(exist_ok=True)
     build(NORMAL, OUT / "normal_loan.pdf")
     build(EDGE, OUT / "edge_case_loan.pdf")
+    build(POLICY, OUT.parent / "rules" / "lending_policy.pdf")

@@ -19,7 +19,11 @@ def build_report(state: PipelineState) -> dict:
     return {
         "status": state.get("status"),
         "document": _dump(state.get("document")),
-        "policy": {"name": state["ruleset"].policy_name, "version": state["ruleset"].version} if state.get("ruleset") else None,
+        "policy": {
+            "name": state["ruleset"].policy_name, "version": state["ruleset"].version,
+            "source": state.get("policy_source", "structured"),
+            "rules": _dump(state["ruleset"].rules),
+        } if state.get("ruleset") else None,
         "decision": "ESCALATE_TO_HUMAN_REVIEW" if state.get("escalations") else "NO_ESCALATION_REQUIRED",
         "executive_summary": state["risk_report"].executive_summary if state.get("risk_report") else None,
         "escalations": _dump(state.get("escalations", [])),
@@ -91,6 +95,17 @@ def render_markdown(r: dict) -> str:
         md.append("")
         if r["missing_terms"]:
             md += [f"**Not found in document:** {', '.join(r['missing_terms'])}", ""]
+
+    policy = r.get("policy") or {}
+    if policy.get("source") == "document":
+        md += ["## Rules Parsed from the Policy Document", "",
+               "These rules were read from the policy by the Policy Parser. Check them before relying on the results.", "",
+               "| Rule | Name | Check | Limit | Severity | Source | Traced |", "|---|---|---|---|---|---|---|"]
+        for p in policy.get("rules", []):
+            limit = f"{p['term']} {p['operator']} {p['value']:g}" if p.get("check_type") == "threshold" else "—"
+            md.append(f"| {p['id']} | {_cell(p['name'])} | {p['check_type']} | `{limit}` | {p['severity']} | "
+                      f"`{p.get('source') or '—'}` | {'✅' if p.get('verified') else '❌'} |")
+        md.append("")
 
     if r["errors"]:
         md += ["## Errors", ""] + [f"- {e}" for e in r["errors"]] + [""]

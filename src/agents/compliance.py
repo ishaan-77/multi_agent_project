@@ -186,11 +186,23 @@ def compliance_node(state: PipelineState) -> dict:
     all_terms = {**terms, **{d.name: d for d in derived}}
     state = {**state, "derived_terms": derived}
 
+    # Rules parsed from a policy document whose source quote couldn't be found are not
+    # trusted: they are reported for a human to confirm instead of being evaluated.
+    untraced = {
+        r.id: ComplianceResult(
+            rule_id=r.id, rule_name=r.name, severity=r.severity, status="NEEDS_REVIEW",
+            rationale=f"This rule was parsed from the policy document but its source text could not be "
+                      f"found in {r.source}; confirm the rule itself before relying on a result.",
+            method="deterministic",
+        )
+        for r in ruleset.rules if r.verified is False
+    }
     deterministic = {
         r.id: check_threshold(r, all_terms.get(r.term), ruleset.escalation)
-        for r in ruleset.rules if r.check_type == "threshold"
+        for r in ruleset.rules if r.check_type == "threshold" and r.id not in untraced
     }
-    llm_rules = [r for r in ruleset.rules if r.check_type != "threshold"]
+    deterministic.update(untraced)
+    llm_rules = [r for r in ruleset.rules if r.check_type != "threshold" and r.id not in untraced]
     judged, audit, errors = judge_rules(llm_rules, state)
     judged_by_id = {j.rule_id: j for j in judged}
 
