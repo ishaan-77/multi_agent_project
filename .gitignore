@@ -17,3 +17,4 @@ venv/
 # Run artifacts (sample outputs we want to keep are committed explicitly)
 outputs/runs/
 *.log
+docs/loom_script.md
