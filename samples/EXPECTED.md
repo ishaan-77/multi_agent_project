@@ -39,7 +39,7 @@ Hand-written ground truth for the two synthetic deals, checked against
 | CR-10 Governing law | PASS | 11.1: Florida |
 | CR-11 Prepayment terms | FAIL or NEEDS_REVIEW | no prepayment clause |
 | CR-12 Consistent dates | FAIL | Effective Date 1 Apr 2026 (2.1) vs 1 May 2026 (S1.1) |
-| CR-13 Use of proceeds | NEEDS_REVIEW | 3.2: "general corporate purposes" with no restrictions |
+| CR-13 Use of proceeds | FAIL or NEEDS_REVIEW | 3.2: "general corporate purposes" with no restrictions |
 
 **Other ambiguities the Risk agent should flag:** interest payment dates are at the lender's discretion (4.2), leverage covenant is "to be agreed" (7.2), the lender can waive covenants unilaterally (7.3), Clause 10 is blank, and there are no conditions precedent.
 
