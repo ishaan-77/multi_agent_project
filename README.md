@@ -30,6 +30,25 @@ python -m pytest -q
 ```
 
 Each run writes `outputs/<deal name>/report.md`, `report.json` and `audit_log.json`.
+
+### Web UI
+
+```bash
+streamlit run app.py
+```
+
+You can run a sample deal or upload your own PDF and rule set, then watch each agent finish live.
+To look at results without calling Gemini, open a saved report from `outputs/`.
+The UI has these tabs:
+- Summary
+- Escalations
+- Compliance matrix
+- Risk register
+- Extracted terms
+- Evidence lookup (turns any `p2:7.2` reference back into the clause text)
+- Audit log
+
+UI runs are saved to `outputs/runs/`, which Git ignores.
 The tests use a fake LLM, so they run offline without an API key.
 
 ## Sample inputs
@@ -71,6 +90,6 @@ Ingest → Extract Terms → Verify Evidence ─(retry ≤1)→ Extract
 - [x] Phase 4: Compliance review agent
 - [x] Phase 5: Risk & summary agent and escalation
 - [x] Phase 6: LangGraph orchestrator, CLI, report rendering
-- [ ] Phase 7: End-to-end runs and tests
-- [ ] Phase 8: Streamlit UI
+- [x] Phase 7: End-to-end runs and tests
+- [x] Phase 8: Streamlit UI
 - [ ] Phase 9: Architecture diagram, docs, Loom
