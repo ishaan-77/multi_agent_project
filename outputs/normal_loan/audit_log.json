@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2026-10-18T08:35:42.924703+00:00",
+    "agent": "ingestion",
+    "event": "completed",
+    "detail": "3 pages -> 35 chunks (structured=True); 13 rules loaded from 'Harborview Commercial Lending Policy (Synthetic)'"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:03.223393+00:00",
+    "agent": "extraction",
+    "event": "llm_call_ok",
+    "detail": "attempt 1, 20.1s, schema=ExtractionResult"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:03.226792+00:00",
+    "agent": "extraction",
+    "event": "completed",
+    "detail": "attempt 1: 28 terms, missing=[]"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:03.228255+00:00",
+    "agent": "verifier",
+    "event": "completed",
+    "detail": "28/28 terms verified"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:17.536943+00:00",
+    "agent": "compliance",
+    "event": "llm_call_ok",
+    "detail": "attempt 1, 14.3s, schema=JudgmentBatch"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:17.537960+00:00",
+    "agent": "compliance",
+    "event": "completed",
+    "detail": "5 deterministic + 8 LLM rules -> {'PASS': 13, 'FAIL': 0, 'NEEDS_REVIEW': 0}"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:47.919029+00:00",
+    "agent": "risk",
+    "event": "llm_call_ok",
+    "detail": "attempt 1, 30.4s, schema=RiskReport"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:47.920814+00:00",
+    "agent": "risk",
+    "event": "completed",
+    "detail": "4 risks, 4 gaps, 5 actions"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:47.922868+00:00",
+    "agent": "escalation",
+    "event": "completed",
+    "detail": "0 items escalated for human review"
+  },
+  {
+    "timestamp": "2026-10-18T08:36:47.923153+00:00",
+    "agent": "orchestrator",
+    "event": "finished",
+    "detail": "status=completed"
+  }
+]
