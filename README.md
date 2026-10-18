@@ -15,9 +15,22 @@ git clone https://github.com/<your-username>/multi_agent_project.git
 cd multi_agent_project
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env          # then paste your Gemini key into .env
-python -m scripts.check_gemini   # verifies the key + structured output
+cp .env.example .env
+python -m scripts.check_gemini
 ```
+
+After copying, paste your Gemini key into `.env`. `check_gemini` verifies the key and structured output.
+
+## Run
+
+```bash
+python run.py --deal samples/normal_loan.pdf
+python run.py --deal samples/edge_case_loan.pdf
+python -m pytest -q
+```
+
+Each run writes `outputs/<deal name>/report.md`, `report.json` and `audit_log.json`.
+The tests use a fake LLM, so they run offline without an API key.
 
 ## Sample inputs
 
@@ -53,11 +66,11 @@ Ingest → Extract Terms → Verify Evidence ─(retry ≤1)→ Extract
 
 - [x] Phase 0: Project skeleton, config, Gemini smoke test
 - [x] Phase 1: Synthetic sample deals and rule set
-- [ ] Phase 2: State schemas and ingestion agent
-- [ ] Phase 3: Term extraction and evidence verifier
-- [ ] Phase 4: Compliance review agent
-- [ ] Phase 5: Risk & summary agent and escalation
-- [ ] Phase 6: LangGraph orchestrator, CLI, report rendering
+- [x] Phase 2: State schemas and ingestion agent
+- [x] Phase 3: Term extraction and evidence verifier
+- [x] Phase 4: Compliance review agent
+- [x] Phase 5: Risk & summary agent and escalation
+- [x] Phase 6: LangGraph orchestrator, CLI, report rendering
 - [ ] Phase 7: End-to-end runs and tests
 - [ ] Phase 8: Streamlit UI
 - [ ] Phase 9: Architecture diagram, docs, Loom
