@@ -46,6 +46,11 @@ def _is_rate_limit(exc: Exception) -> bool:
     return "429" in text or "RESOURCE_EXHAUSTED" in text or "quota" in text.lower()
 
 
+def _is_daily_quota(exc: Exception) -> bool:
+    """A per-day quota won't reset for hours, so retrying is pointless."""
+    return "PerDay" in str(exc)
+
+
 def call_structured(schema: type[T], system: str, user: str, agent: str) -> tuple[T, list[AuditEntry]]:
     llm = _make_llm().with_structured_output(schema)
     base = [("system", system), ("human", user)]
@@ -73,6 +78,8 @@ def call_structured(schema: type[T], system: str, user: str, agent: str) -> tupl
                 agent=agent, event="llm_call_failed",
                 detail=f"attempt {attempt}: {type(exc).__name__}: {str(exc)[:300]}",
             ))
+            if _is_daily_quota(exc):
+                raise LLMError(f"{agent}: daily API quota exhausted, not retrying: {str(exc)[:300]}", audit) from exc
             if attempt == attempts:
                 break
             if _is_rate_limit(exc):

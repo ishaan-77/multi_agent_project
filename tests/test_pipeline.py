@@ -115,3 +115,26 @@ def test_high_llm_risk_alone_does_not_escalate_but_critical_does(fake_llm, tmp_p
     fake_llm({**base, "RiskReport": risk_report().model_copy(update={"risks": [high.model_copy(update={"severity": "critical"})]})})
     report, _ = run_pipeline(NORMAL, RULES, tmp_path)
     assert report["decision"] == "ESCALATE_TO_HUMAN_REVIEW"
+
+
+def test_daily_quota_fails_fast_without_retrying(fake_llm, tmp_path):
+    llm = fake_llm({
+        "ExtractionResult": normal_extraction(),
+        "JudgmentBatch": RuntimeError("429 RESOURCE_EXHAUSTED quotaId: GenerateRequestsPerDayPerProjectPerModel-FreeTier"),
+        "RiskReport": risk_report(),
+    })
+    report, _ = run_pipeline(NORMAL, RULES, tmp_path)
+    assert llm.calls.count("JudgmentBatch") == 1
+    assert "daily API quota" in report["errors"][0]
+    assert report["status"] == "completed_with_errors"
+
+
+def test_on_step_reports_each_agent_in_order(fake_llm, tmp_path):
+    fake_llm({
+        "ExtractionResult": normal_extraction(),
+        "JudgmentBatch": judgments(JUDGED, "PASS"),
+        "RiskReport": risk_report(),
+    })
+    steps = []
+    run_pipeline(NORMAL, RULES, tmp_path, on_step=lambda node, update: steps.append(node))
+    assert steps == ["ingest", "extract", "verify", "compliance", "risk", "escalate", "assemble"]
